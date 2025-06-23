@@ -21,6 +21,7 @@ services:
       MYSQL_PASSWORD: application123
     volumes:
       - mysql_data:/var/lib/mysql
+      - ./db-conf:/var/db-conf
     networks:
       - application_network
     ports:
