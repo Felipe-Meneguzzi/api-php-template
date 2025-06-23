@@ -1,14 +1,14 @@
 <?php
 declare(strict_types=1);
 
+use App\Middleware\LogMiddleware;
 use App\Module\Login\Controller\UserLoginController;
 use App\Router;
-use DI\Container;
 
-return function (Router $router, Container $container) {
-    $router->group(['prefix' => '/login', 'middleware' => []], function ($router) use ($container) {
+return function (Router $router) {
+    $router->group(['prefix' => '/login', 'middleware' => [LogMiddleware::class]], function ($router) {
 
-        $router->get('', $container->get(UserLoginController::class));
+        $router->get(uri:'', handler:[UserLoginController::class, 'Run']);
 
     });
 };

@@ -18,6 +18,7 @@ try {
     date_default_timezone_set('America/Sao_Paulo');
 
     /********************************************************************************************************************/
+
     set_error_handler(function ($errno, $errstr, $errfile, $errline) {
         throw new \ErrorException($errstr, 0, $errno, $errfile, $errline);
     });
@@ -28,7 +29,7 @@ try {
     $container = AppDIContainer::build();
 
     $request = new HTTPRequest();
-    $router = new Router($request);
+    $router = new Router($request, $container);
 
     $routeDefiner = require __DIR__ . '/../src/Api.php';
     $routeDefiner($router, $container);

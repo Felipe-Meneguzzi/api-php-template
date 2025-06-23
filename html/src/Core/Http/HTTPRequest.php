@@ -18,6 +18,8 @@ class HTTPRequest extends ObjectCore {
     public string $referer;
     public array $requestTime;
     public string $requestIP;
+    public array $dynamicParams;
+    public array $middlewareParams;
 
     public function __construct(){
         $this->uri = $_SERVER['REQUEST_URI'];
@@ -31,6 +33,8 @@ class HTTPRequest extends ObjectCore {
         $this->referer = $_SERVER['HTTP_REFERER'] ?? 'Unknown';
         $this->requestTime = self::formatRequestTime();
         $this->requestIP = self::getClientIP();
+        $this->dynamicParams = [];
+        $this->middlewareParams = [];
     }
 
     private function getClientIP(): string {

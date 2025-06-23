@@ -8,7 +8,6 @@ use App\Core\Exception\AppException;
 use App\Module\Login\Repository\IUserLoginRepository;
 
 interface IUserLoginService {
-	public function __construct(IUserLoginRepository $repository);
 	public function Run(DTOInterface $iDTO): array;
 }
 

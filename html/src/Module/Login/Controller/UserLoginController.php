@@ -4,8 +4,7 @@ declare(strict_types = 1);
 namespace App\Module\Login\Controller;
 
 use App\Core\DefaultController;
-use App\Core\Exception\AppException;
-use App\Core\Http\DefaultResponse;
+use App\Core\Exception\RequiredParamException;
 use App\Core\Http\HttpRequest;
 use App\Module\Login\DTO\Input\UserLoginIDTO;
 use App\Module\Login\Service\IUserLoginService;
@@ -22,7 +21,7 @@ class UserLoginController extends DefaultController{
 		$password = $request->body['password'] ?? null;
 
         if (empty($login) || empty($password)) {
-            throw new AppException("Valor vazio enviado, por favor envie 'login' e 'password'", 400);
+            throw new RequiredParamException();
         }
 
         $iDTO = new UserLoginIDTO($login, $password);

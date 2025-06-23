@@ -9,6 +9,8 @@ use App\Module\Login\Service\IUserLoginService;
 use App\Module\Login\Service\UserLoginService;
 use App\Module\Login\Repository\UserLoginRepository;
 use App\Module\Login\Repository\IUserLoginRepository;
+use App\Module\RequestLog\Service\IRequestLogService;
+use App\Module\RequestLog\Service\RequestLogService;
 use DI\Container;
 use DI\ContainerBuilder;
 use function DI\autowire;
@@ -19,7 +21,8 @@ class AppDIContainer {
 
 		$builder->addDefinitions([
 			IUserLoginService::class => autowire(UserLoginService::class),
-			IUserLoginRepository::class => autowire(UserLoginRepository::class)
+			IUserLoginRepository::class => autowire(UserLoginRepository::class),
+            IRequestLogService::class => autowire(RequestLogService::class),
 		]);
 
         /********************************************************DATABASE********************************************************/
