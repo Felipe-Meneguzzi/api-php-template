@@ -13,18 +13,22 @@ interface IUserLoginRepository {
 
 class UserLoginRepository implements IUserLoginRepository {
 	private Connection $db;
+    private string $table;
 
-	public function __construct(protected IDBConnection $dbClass) {
+	public function __construct(protected IDBConnection $dbClass, protected UserEntity $entity) {
 		$this->db = $dbClass->getConnection();
+        $this->table = $this->entity->getTable();
 	}
 
-	public function findByLogin(string $login) {
-        $user = UserEntity::where('login', $login)->first();
+	public function findByLogin(string $login): ?UserEntity {
+        $user_data = $this->db->table($this->table)
+            ->where('login', $login)
+            ->first();
 
-        if (!$user) {
+        if (!$user_data) {
             return null;
         }
 
-        return $user;
+        return $this->entity->newInstance((array) $user_data, true);
 	}
 }
