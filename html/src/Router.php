@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App;
 
 use App\Core\Exception\AppException;
+use App\Core\Http\DefaultResponse;
 use App\Core\Http\HTTPRequest;
 use DI\Container;
 
@@ -87,7 +88,9 @@ class Router {
                 // Se houver mais valores do que chaves (ou vice-versa), array_combine lidará com isso
                 $this->request->dynamicParams = array_combine($paramKeys, $matches);
 
-                $this->executePipeline($route['handler'], $route['middleware'], $route['controllerParams']);
+                $response = $this->executePipeline($route['handler'], $route['middleware'], $route['controllerParams']);
+
+                $response->sendResponse();
 
                 return;
             }
@@ -96,11 +99,10 @@ class Router {
         throw new AppException("Route not found", 404);
     }
 
-    protected function executePipeline(array|callable $handler, array $middlewares, array $controllerParams): void
-    {
+    protected function executePipeline(array|callable $handler, array $middlewares, array $controllerParams): DefaultResponse {
         // O "núcleo" da cebola/pipeline: a ação final que chama o controller.
         $coreAction = function (HTTPRequest $request) use ($handler, $controllerParams) {
-            $this->callAction($handler, $controllerParams);
+            return $this->callAction($handler, $controllerParams);
         };
 
         // Invertemos o array de middlewares para construir a cadeia de fora para dentro.
@@ -121,10 +123,10 @@ class Router {
         );
 
         // Executa a cadeia de middlewares completa, começando pela camada mais externa.
-        call_user_func($pipeline, $this->request);
+        return call_user_func($pipeline, $this->request);
     }
 
-    protected function callAction($handler, array $params = []): void {
+    protected function callAction($handler, array $params = []): DefaultResponse {
         // Verifica se o handler é o array [classe, método]
         if (is_array($handler) && count($handler) === 2) {
             [$controllerClass, $method] = $handler;
@@ -133,16 +135,14 @@ class Router {
                 $controllerInstance = $this->container->get($controllerClass);
 
                 if (method_exists($controllerInstance, $method)) {
-                    $controllerInstance->$method($this->request, ...$params);
-                    return;
+                    return $controllerInstance->$method($this->request, ...$params);
                 }
             }
         }
 
         // Se o handler for uma Closure/função anônima
         if (is_callable($handler)) {
-            $handler($this->request, ...$params);
-            return;
+            return $handler($this->request, ...$params);
         }
 
         throw new AppException("Invalid handler for the route.", 500);

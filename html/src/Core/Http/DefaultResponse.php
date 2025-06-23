@@ -35,7 +35,5 @@ class DefaultResponse extends ObjectCore {
         }
 
         echo json_encode($this->body);
-
-        exit;
     }
 }

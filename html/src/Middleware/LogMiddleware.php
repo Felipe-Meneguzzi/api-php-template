@@ -12,7 +12,6 @@ class LogMiddleware {
     }
 
     public function handle(HTTPRequest $request, callable $next) {
-        $request->middlewareParams['testando'] = 'salve';
 
         return $next($request);
     }

@@ -5,6 +5,7 @@ namespace App\Module\Login\Controller;
 
 use App\Core\DefaultController;
 use App\Core\Exception\RequiredParamException;
+use App\Core\Http\DefaultResponse;
 use App\Core\Http\HttpRequest;
 use App\Module\Login\DTO\Input\UserLoginIDTO;
 use App\Module\Login\Service\IUserLoginService;
@@ -16,7 +17,7 @@ class UserLoginController extends DefaultController{
 		$this->service = $service;
 	}
 
-	public function Run(HTTPRequest $request): void {
+	public function Run(HTTPRequest $request): DefaultResponse {
 		$login = $request->body['login'] ?? null;
 		$password = $request->body['password'] ?? null;
 
@@ -28,9 +29,7 @@ class UserLoginController extends DefaultController{
 
 		$serviceResponse = $this->service->Run($iDTO);
 
-        $response = $this->getDefaultResponse($serviceResponse);
-
-        $response->sendResponse();
+        return $this->getDefaultResponse($serviceResponse);
 	}
 
 }
