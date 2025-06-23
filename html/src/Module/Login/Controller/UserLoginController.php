@@ -17,7 +17,7 @@ class UserLoginController extends DefaultController{
 		$this->service = $service;
 	}
 
-	public function Run(HTTPRequest $request): DefaultResponse {
+	public function Run(HTTPRequest $request): void {
 		$login = $request->body['login'] ?? null;
 		$password = $request->body['password'] ?? null;
 
@@ -29,7 +29,9 @@ class UserLoginController extends DefaultController{
 
 		$serviceResponse = $this->service->Run($iDTO);
 
-        return $this->getDefaultResponse($serviceResponse);
+        $response = $this->getDefaultResponse($serviceResponse);
+
+        $response->sendResponse();
 	}
 
 }

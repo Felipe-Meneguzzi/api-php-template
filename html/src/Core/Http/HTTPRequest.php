@@ -7,6 +7,7 @@ use DateTime;
 use DateTimeZone;
 
 class HTTPRequest extends ObjectCore {
+    public string $uri;
     public array $path;
     public string $method;
     public array $headers;
@@ -19,6 +20,7 @@ class HTTPRequest extends ObjectCore {
     public string $requestIP;
 
     public function __construct(){
+        $this->uri = $_SERVER['REQUEST_URI'];
         $this->method = $_SERVER['REQUEST_METHOD'] ?? 'Unknown';
         $this->headers = function_exists('getallheaders') ? getallheaders() : [];
         $this->params = $_GET;

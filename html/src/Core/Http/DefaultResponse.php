@@ -26,4 +26,16 @@ class DefaultResponse extends ObjectCore {
         ];
         $this->headers = $headers;
     }
+
+    public function sendResponse (): void {
+        http_response_code($this->body['statusCode']);
+
+        foreach ($this->headers as $name => $value) {
+            header("$name: $value");
+        }
+
+        echo json_encode($this->body);
+
+        exit;
+    }
 }
