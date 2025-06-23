@@ -3,31 +3,31 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: neohabit-app
+    container_name: application-app
     volumes:
       - ./html:/var/www/html
     networks:
-      - app_network
+      - application_network
     ports:
       - "8180:80"
 
   mysql:
     image: mysql:8.1.0
-    container_name: neohabit-mysql
+    container_name: application-mysql
     environment:
       MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: neohabit_db
-      MYSQL_USER: felipe
-      MYSQL_PASSWORD: fpm
+      MYSQL_DATABASE: application_db
+      MYSQL_USER: application
+      MYSQL_PASSWORD: application123
     volumes:
       - mysql_data:/var/lib/mysql
     networks:
-      - app_network
+      - application_network
     ports:
       - "3316:3306"
 
 networks:
-  app_network:
+  application_network:
     driver: bridge
 
 volumes:
