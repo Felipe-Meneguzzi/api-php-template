@@ -47,42 +47,70 @@ class Router {
         ];
     }
 
-    public function get(string $uri, array|callable $handler, array $attributes = [], array $controllerParams = []): void {
-        $this->register($uri, 'GET', $handler, $attributes['middleware'] ?? [], $controllerParams);
+    public function get(string $uri, array|callable $handler, array $middlewares = [], array $controllerParams = []): void {
+        $this->register($uri, 'GET', $handler, $middlewares ?? [], $controllerParams);
     }
 
-    public function post(string $uri, array|callable $handler, array $attributes = [], array $controllerParams = []): void {
-        $this->register($uri, 'POST', $handler, $attributes['middleware'] ?? [], $controllerParams);
+    public function post(string $uri, array|callable $handler, array $middlewares = [], array $controllerParams = []): void {
+        $this->register($uri, 'POST', $handler, $middlewares ?? [], $controllerParams);
     }
 
-    public function put(string $uri, array|callable $handler, array $attributes = [], array $controllerParams = []): void {
-        $this->register($uri, 'PUT', $handler, $attributes['middleware'] ?? [], $controllerParams);
+    public function put(string $uri, array|callable $handler, array $middlewares = [], array $controllerParams = []): void {
+        $this->register($uri, 'PUT', $handler, $middlewares ?? [], $controllerParams);
     }
 
-    public function patch(string $uri, array|callable $handler, array $attributes = [], array $controllerParams = []): void {
-        $this->register($uri, 'PATCH', $handler, $attributes['middleware'] ?? [], $controllerParams);
+    public function patch(string $uri, array|callable $handler, array $middlewares = [], array $controllerParams = []): void {
+        $this->register($uri, 'PATCH', $handler, $middlewares ?? [], $controllerParams);
     }
 
-    public function delete(string $uri, array|callable $handler, array $attributes = [], array $controllerParams = []): void {
-        $this->register($uri, 'DELETE', $handler, $attributes['middleware'] ?? [], $controllerParams);
+    public function delete(string $uri, array|callable $handler, array $middlewares = [], array $controllerParams = []): void {
+        $this->register($uri, 'DELETE', $handler, $middlewares ?? [], $controllerParams);
     }
 
     public function dispatch(): void {
         $method = strtoupper($this->request->method);
         $uri = parse_url($this->request->uri, PHP_URL_PATH);
 
-        foreach ($this->routes[$method] ?? [] as $routeUri => $route) {
-            // Encontra todas as chaves na URI da rota (ex: {id}, {slug})
-            preg_match_all('/\{([a-zA-Z0-9_-]+)\}/', $routeUri, $keys);
-            $paramKeys = $keys[1]; // Array com os nomes das chaves: ['id', 'slug']
+        // Normaliza a URI removendo a barra final, se houver,
+        // mas não mexe na rota raiz "/".
+        if (strlen($uri) > 1) {
+            $uri = rtrim($uri, '/');
+        }
 
-            // Converte a URI da rota em um padrão regex
-            // Ex: /users/{id} -> #^/users/([a-zA-Z0-9_-]+)$#
-            $pattern = preg_replace('/\{([a-zA-Z0-9_-]+)\}/', '([a-zA-Z0-9_-]+)', $routeUri);
+        foreach ($this->routes[$method] ?? [] as $routeUri => $route) {
+            // 1. Regex mais poderosa para encontrar parâmetros e suas regras customizadas
+            // Ex: para /user/{id:\d+}, $matches[0][1] será 'id' e $matches[0][2] será '\d+'
+            preg_match_all('/\{([a-zA-Z0-9_-]+)(?::([^\}]+))?\}/', $routeUri, $matches, PREG_SET_ORDER);
+
+            $paramKeys = [];
+            $pattern = $routeUri;
+
+            // 2. Loop para construir o padrão regex final
+            foreach ($matches as $match) {
+                $placeholder = $match[0]; // O placeholder completo, ex: {id:\d+}
+                $keyName     = $match[1]; // O nome da chave, ex: id
+
+                // Se uma regex customizada foi definida (match[2]), use-a.
+                // Caso contrário, use o padrão default.
+                $customRegex = $match[2] ?? '[a-zA-Z0-9_-]+';
+
+                $paramKeys[] = $keyName;
+
+                // 3. Substitui o placeholder pela regex de captura na string do padrão
+                // Atenção ao uso de preg_quote para o placeholder, garantindo que os '{' e '}'
+                // sejam tratados como texto literal na substituição.
+                $pattern = str_replace($placeholder, "($customRegex)", $pattern);
+            }
+
             $pattern = "#^" . $pattern . "$#";
 
             if (preg_match($pattern, $uri, $matches)) {
                 array_shift($matches); // Remove o primeiro elemento que é a string completa da URL
+
+                if (count($paramKeys) !== count($matches)) {
+                    //todo LOG AQUI DE ERRO
+                    continue;
+                }
 
                 // Combina as chaves extraídas com os valores correspondentes
                 // Se houver mais valores do que chaves (ou vice-versa), array_combine lidará com isso
@@ -135,14 +163,14 @@ class Router {
                 $controllerInstance = $this->container->get($controllerClass);
 
                 if (method_exists($controllerInstance, $method)) {
-                    return $controllerInstance->$method($this->request, ...$params);
+                    return $controllerInstance->$method($this->request, $params);
                 }
             }
         }
 
         // Se o handler for uma Closure/função anônima
         if (is_callable($handler)) {
-            return $handler($this->request, ...$params);
+            return $handler($this->request, $params);
         }
 
         throw new AppException("Invalid handler for the route.", 500);

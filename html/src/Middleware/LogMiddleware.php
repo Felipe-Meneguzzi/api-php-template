@@ -7,11 +7,10 @@ use App\Core\Http\HTTPRequest;
 use App\Module\RequestLog\Service\IRequestLogService;
 
 class LogMiddleware {
-    public function __construct(protected IRequestLogService $service) {
-
-    }
+    public function __construct(protected IRequestLogService $service) {}
 
     public function handle(HTTPRequest $request, callable $next) {
+        $this->service->Run($request);
 
         return $next($request);
     }

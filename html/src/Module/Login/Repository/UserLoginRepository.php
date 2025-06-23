@@ -14,7 +14,7 @@ interface IUserLoginRepository {
 class UserLoginRepository implements IUserLoginRepository {
 	private Connection $db;
 
-	public function __construct(IDBConnection $dbClass) {
+	public function __construct(protected IDBConnection $dbClass) {
 		$this->db = $dbClass->getConnection();
 	}
 

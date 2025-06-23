@@ -25,7 +25,6 @@ class DBConnection implements IDBConnection {
             'charset'   => $charset,
         ]);
 
-        $capsule->setAsGlobal();
         $capsule->bootEloquent();
 
         $this->connection = $capsule->getConnection();

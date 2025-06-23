@@ -36,4 +36,20 @@ class DefaultResponse extends ObjectCore {
 
         echo json_encode($this->body);
     }
+
+    public static function getDefaultResponse(array $serviceResponse): self {
+        $response = new self(
+            statusCode: $serviceResponse['statusCode'] ?? 200,
+            data: $serviceResponse['data'] ?? [],
+            metadata:  $serviceResponse['metadata'] ?? [],
+            message: $serviceResponse['message'] ?? '',
+            errors: $serviceResponse['errors'] ?? [],
+        );
+
+        if (isset($serviceResponse['headers'])) {
+            $response->headers = $serviceResponse['headers'];
+        }
+
+        return $response;
+    }
 }
