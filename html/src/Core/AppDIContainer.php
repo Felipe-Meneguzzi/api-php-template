@@ -9,6 +9,8 @@ use App\Module\Login\Service\IUserLoginService;
 use App\Module\Login\Service\UserLoginService;
 use App\Module\Login\Repository\UserLoginRepository;
 use App\Module\Login\Repository\IUserLoginRepository;
+use App\Module\RequestLog\Repository\IRequestLogRepository;
+use App\Module\RequestLog\Repository\RequestLogRepository;
 use App\Module\RequestLog\Service\IRequestLogService;
 use App\Module\RequestLog\Service\RequestLogService;
 use DI\Container;
@@ -23,6 +25,7 @@ class AppDIContainer {
 			IUserLoginService::class => autowire(UserLoginService::class),
 			IUserLoginRepository::class => autowire(UserLoginRepository::class),
             IRequestLogService::class => autowire(RequestLogService::class),
+            IRequestLogRepository::class => autowire(RequestLogRepository::class),
 		]);
 
         /********************************************************DATABASE********************************************************/

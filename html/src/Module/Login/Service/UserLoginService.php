@@ -12,11 +12,7 @@ interface IUserLoginService {
 }
 
 class UserLoginService implements IUserLoginService {
-	private IUserLoginRepository $repository;
-
-	public function __construct(IUserLoginRepository $repository) {
-		$this->repository = $repository;
-	}
+	public function __construct(protected IUserLoginRepository $repository) {}
 
 	public function Run(DTOInterface $iDTO): array {
 		$user = $this->repository->findByLogin($iDTO->login);
