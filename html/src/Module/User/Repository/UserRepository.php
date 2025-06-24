@@ -39,7 +39,7 @@ class UserRepository implements IUserRepository {
 
     public function getById(int $id): ?UserEntity {
         $data = $this->db->table($this->table)
-            ->where('id', $id)
+            ->where('uuid', $id)
             ->first();
 
         if (!$data) {

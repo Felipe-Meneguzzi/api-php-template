@@ -22,7 +22,7 @@ return function (Router $router) {
         });
 
         $router->group(['prefix' => '/user'], function ($router) {
-            $router->get(uri: '/{id:[1-9]\d*}', handler: [GetUserByIdController::class, 'Run']);
+            $router->get(uri: '/{id}', handler: [GetUserByIdController::class, 'Run']);
             $router->get(uri: '', handler: [GetAllUsersController::class, 'Run']);
         });
 
