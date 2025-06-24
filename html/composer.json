@@ -12,6 +12,7 @@
     "ext-pdo": "*",
     "illuminate/database": "^12.19",
     "illuminate/console": "^12.19",
-    "ramsey/uuid": "^4.8"
+    "ramsey/uuid": "^4.8",
+    "firebase/php-jwt": "^6.11"
   }
 }

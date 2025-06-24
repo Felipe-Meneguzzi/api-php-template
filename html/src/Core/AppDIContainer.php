@@ -5,6 +5,8 @@ namespace App\Core;
 
 use App\Core\DB\DBConnection;
 use App\Core\DB\IDBConnection;
+use App\Module\Login\Service\AuthenticateService;
+use App\Module\Login\Service\IAuthenticateService;
 use App\Module\Login\Service\IUserLoginService;
 use App\Module\Login\Service\UserLoginService;
 use App\Module\Login\Repository\UserLoginRepository;
@@ -35,6 +37,7 @@ class AppDIContainer {
             IGetAllUsersService::class => autowire(GetAllUsersService::class),
             IUserRepository::class => autowire(UserRepository::class),
             IGetUserByIdService::class => autowire(GetUserByIdService::class),
+            IAuthenticateService::class => autowire(AuthenticateService::class),
 		]);
 
         /********************************************************DATABASE********************************************************/

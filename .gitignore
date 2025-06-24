@@ -2,3 +2,5 @@
 /html/vendor
 /html/.env
 /html/teste.php
+/container-conf/openssl-keys/private.key
+/container-conf/openssl-keys/public.key

@@ -3,19 +3,20 @@ declare(strict_types=1);
 
 namespace App\Module\RequestLog\Service;
 
+use App\Core\Exception\AppException;
 use App\Entity\RequestLogEntity;
 use App\Module\RequestLog\DTO\Input\RequestLogIDTO;
 use App\Module\RequestLog\Repository\IRequestLogRepository;
 use DateTime;
 
 interface IRequestLogService {
-	public function Run(RequestLogIDTO $iDTO): bool;
+	public function Run(RequestLogIDTO $iDTO): void;
 }
 
 class RequestLogService implements IRequestLogService {
 	public function __construct(protected IRequestLogRepository $repository) {}
 
-	public function Run(RequestLogIDTO $iDTO): bool {
+	public function Run(RequestLogIDTO $iDTO): void {
         $formatedTime = DateTime::createFromFormat('d/m/Y H:i:s', $iDTO->time);
 
         $data = [
@@ -32,6 +33,8 @@ class RequestLogService implements IRequestLogService {
 
         $entity = new RequestLogEntity($data);
 
-		return $this->repository->insert($entity);
+		if (!$this->repository->insert($entity)){
+            throw new AppException('Cant insert request log in database');
+        }
 	}
 }

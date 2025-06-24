@@ -1,6 +1,7 @@
 <?php
 declare(strict_types=1);
 
+use App\Middleware\AuthenticateMiddleware;
 use App\Middleware\RequestLogMiddleware;
 use App\Module\Login\Controller\UserLoginController;
 use App\Module\User\Controller\GetUserByIdController;
@@ -13,6 +14,13 @@ return function (Router $router) {
     if ($_ENV['ENVIRONMENT'] === 'dev') {
         $router->get(uri: '/test/restful/{parametro_1}', handler: [FeatureTestController::class, 'Run'], middlewares: [FeatureTestMiddleware::class, RequestLogMiddleware::class], controllerParams: ['string', 1, false]);
     }
+
+    /************************************************************************************************************************************************/
+    /************************************************************************************************************************************************/
+    /***************************************************ROTAS DENTRO DA APLICAÇÃO, PASSAM PELO LOG***************************************************/
+    /************************************************************************************************************************************************/
+    /************************************************************************************************************************************************/
+
     $router->group(['prefix' => '', 'middleware' => [RequestLogMiddleware::class]], function ($router) {
 
         $router->group(['prefix' => '/login'], function ($router) {
@@ -21,9 +29,17 @@ return function (Router $router) {
 
         });
 
-        $router->group(['prefix' => '/user'], function ($router) {
-            $router->get(uri: '/{id}', handler: [GetUserByIdController::class, 'Run']);
-            $router->get(uri: '', handler: [GetAllUsersController::class, 'Run']);
+        /************************************************************************************************************************************************/
+        /*****************************************************************ROTAS LOGADAS******************************************************************/
+        /************************************************************************************************************************************************/
+
+        $router->group(['prefix' => '/auth', 'middleware' => [AuthenticateMiddleware::class]], function ($router) {
+
+            $router->group(['prefix' => '/user'], function ($router) {
+                $router->get(uri: '/{id}', handler: [GetUserByIdController::class, 'Run']);
+                $router->get(uri: '', handler: [GetAllUsersController::class, 'Run']);
+            });
+
         });
 
     });

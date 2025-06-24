@@ -24,9 +24,8 @@ class RequestLogMiddleware {
             ip: $request->requestIP ?? 'Unknown',
         );
 
-        if(!$this->service->Run($iDTO)){
-            throw new AppException('Cant insert request log in database');
-        }
+        $this->service->Run($iDTO);
+
         return $next($request);
     }
 
