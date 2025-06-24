@@ -14,7 +14,13 @@ final readonly class JWTToken implements Stringable {
     private string $value;
 
     private function __construct(array $payload) {
-        $this->value = JWT::encode($payload, $_ENV['JWT_SECRET_KEY'], $_ENV['JWT_ALGORITHM']);
+        try {
+            $privateKey = file_get_contents($_ENV['SSL_PRIVATE_KEY_PATH']);
+        }catch (\Throwable $throwable){
+            throw new AppException('Unable to read private key, please check /docs/KEYS.md to configure your key.');
+        }
+
+        $this->value = JWT::encode($payload, $privateKey, $_ENV['JWT_ALGORITHM']);
     }
 
     public static function fromPayload(array $payload, int $activationHours = 0): self {
@@ -32,7 +38,13 @@ final readonly class JWTToken implements Stringable {
     }
 
     public static function decode(string|self $token): \stdClass {
-        return JWT::decode($token, new Key($_ENV['JWT_SECRET_KEY'], $_ENV['JWT_ALGORITHM']));
+        try {
+            $publicKey = file_get_contents($_ENV['SSL_PUBLIC_KEY_PATH']);
+        }catch (\Throwable $throwable){
+            throw new AppException('Unable to read public key, please check /docs/KEYS.md to configure your key.');
+        }
+
+        return JWT::decode($token, new Key($publicKey, $_ENV['JWT_ALGORITHM']));
     }
 
     public function __toString(): string {

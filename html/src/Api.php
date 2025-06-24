@@ -12,7 +12,7 @@ use App\Module\User\Controller\GetAllUsersController;
 
 return function (Router $router) {
     if ($_ENV['ENVIRONMENT'] === 'dev') {
-        $router->get(uri: '/test/restful/{parametro_1}', handler: [FeatureTestController::class, 'Run'], middlewares: [FeatureTestMiddleware::class, RequestLogMiddleware::class], controllerParams: ['string', 1, false]);
+        $router->get(uri: '/test/restful/{parametro_1}', handler: [FeatureTestController::class, 'Run'], middlewares: [FeatureTestMiddleware::class], controllerParams: ['string', 1, false]);
     }
 
     /************************************************************************************************************************************************/

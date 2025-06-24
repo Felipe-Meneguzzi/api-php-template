@@ -31,6 +31,13 @@ openssl rsa -pubout -in private.key -out public.key
 
 Isso criará o arquivo `public.key` no mesmo diretório.
 
+### 3. Configurar o Caminho no .env
+
+Agora com as duas chaves geradas, você deve especificar o caminho no seu .env com as chaves `SSL_PUBLIC_KEY_PATH` e `SSL_PRIVATE_KEY_PATH`
+Caso não tenha sido alterado nada no Dockerfile e docker-compose o caminho correto ja está setado no .env.example
+
+***Lembre-se:*** O caminho sempre é relativo ao container, e não ao seu computador.
+
 ## Resumo
 
 Após seguir os passos, você terá os seguintes arquivos neste diretório:
