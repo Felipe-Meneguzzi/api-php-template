@@ -7,11 +7,38 @@ use App\Core\Exception\AppException;
 use App\Core\Http\DefaultResponse;
 use App\Core\Http\HTTPRequest;
 use DI\Container;
+use OpenApi\Attributes as OA;
 
+#[OA\Info(
+    version: '1.0.0',
+    description: 'Uma API robusta e escalável construída com as melhores práticas do PHP moderno.',
+    title: 'API PHP Template',
+    contact: new OA\Contact(email: 'admin@gmail.com')
+)]
+#[OA\Server(
+    url: 'http://localhost:8180',
+    description: 'Servidor de Desenvolvimento'
+)]
+#[OA\SecurityScheme(
+    securityScheme: 'bearerAuth',
+    type: 'http',
+    description: "Insira o token JWT no formato 'Bearer {token}'",
+    bearerFormat: 'JWT',
+    scheme: 'bearer'
+)]
 class Router {
     protected array $routes = [];
     protected array $groupStack = [];
 
+    #[OA\Get(
+        path: '/api',
+        summary: 'Verifica o status da API',
+        tags: ['API'],
+        responses: [
+            new OA\Response(response: '200', description: 'Api On'),
+            new OA\Response(response: '500', description: 'Api with problem')
+        ]
+    )]
     public function __construct(
         protected readonly HTTPRequest $request,
         protected readonly Container $container

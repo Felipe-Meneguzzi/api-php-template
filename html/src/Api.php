@@ -6,22 +6,19 @@ use App\Middleware\RequestLogMiddleware;
 use App\Module\Login\Controller\UserLoginController;
 use App\Module\User\Controller\GetUserByIdController;
 use App\Router;
-use App\Module\FeaturesTest\Controller\FeatureTestController;
-use App\Module\FeaturesTest\Middleware\FeatureTestMiddleware;
 use App\Module\User\Controller\GetAllUsersController;
 
 return function (Router $router) {
-    if ($_ENV['ENVIRONMENT'] === 'dev') {
-        $router->get(uri: '/test/restful/{parametro_1}', handler: [FeatureTestController::class, 'Run'], middlewares: [FeatureTestMiddleware::class], controllerParams: ['string', 1, false]);
-    }
-
     /************************************************************************************************************************************************/
     /************************************************************************************************************************************************/
     /***************************************************ROTAS DENTRO DA APLICAÇÃO, PASSAM PELO LOG***************************************************/
     /************************************************************************************************************************************************/
     /************************************************************************************************************************************************/
+    $router->get('/api', function () {
+        return new \App\Core\Http\DefaultResponse(statusCode: 200, message: 'API ON :)');
+    });
 
-    $router->group(['prefix' => '', 'middleware' => [RequestLogMiddleware::class]], function ($router) {
+    $router->group(['prefix' => '/api', 'middleware' => [RequestLogMiddleware::class]], function ($router) {
 
         $router->group(['prefix' => '/login'], function ($router) {
 

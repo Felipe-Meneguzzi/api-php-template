@@ -13,6 +13,7 @@
     "illuminate/database": "^12.19",
     "illuminate/console": "^12.19",
     "ramsey/uuid": "^4.8",
-    "firebase/php-jwt": "^6.11"
+    "firebase/php-jwt": "^6.11",
+    "zircote/swagger-php": "^5.1"
   }
 }

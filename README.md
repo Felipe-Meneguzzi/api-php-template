@@ -60,7 +60,7 @@ Siga os passos abaixo para configurar e executar o projeto localmente.
 
     ```bash
     # Acesse o terminal do container da aplicação
-    docker-compose exec php-apache bash
+    docker exec -it application-mysql bash
 
     # Dentro do container, execute os scripts SQL para criar as tabelas e popular os dados
     mysql -u [SEU_USER] -p[SUA_SENHA] -h mysql [SEU_DB] < /var/db-conf/migration/create_users_table.sql
