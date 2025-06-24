@@ -17,7 +17,7 @@ class UserLoginController {
 		$password = $request->body['password'] ?? null;
 
         if (empty($login) || empty($password)) {
-            throw new RequiredParamException();
+            throw new RequiredParamException(['login', 'password']);
         }
 
         $iDTO = new UserLoginIDTO($login, $password);

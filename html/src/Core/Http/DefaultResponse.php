@@ -3,6 +3,7 @@
 namespace App\Core\Http;
 
 use App\Core\ObjectCore;
+use Illuminate\Database\Eloquent\Model;
 
 class DefaultResponse extends ObjectCore {
     public array $headers;
@@ -10,7 +11,7 @@ class DefaultResponse extends ObjectCore {
 
     public function __construct(
         int $statusCode,
-        array $data = [],
+        array|Model $data = [],
         array $metadata = [],
         string $message = '',
         array $errors = [],

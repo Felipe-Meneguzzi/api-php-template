@@ -11,7 +11,7 @@ class HTTPRequest extends ObjectCore {
     public array $path;
     public string $method;
     public array $headers;
-    public array $params;
+    public array $queryParams;
     public array $body;
     public array $cookies;
     public string $userAgent;
@@ -25,8 +25,8 @@ class HTTPRequest extends ObjectCore {
         $this->uri = $_SERVER['REQUEST_URI'];
         $this->method = $_SERVER['REQUEST_METHOD'] ?? 'Unknown';
         $this->headers = function_exists('getallheaders') ? getallheaders() : [];
-        $this->params = $_GET;
-        $this->path = explode('/', trim($this->params['path'] ?? '', '/'));
+        $this->queryParams = $_GET;
+        $this->path = explode('/', trim($this->queryParams['path'] ?? '', '/'));
         $this->body = json_decode(file_get_contents('php://input'), true) ?? [];
         $this->cookies = $_COOKIE ?? [];
         $this->userAgent = $_SERVER['HTTP_USER_AGENT'] ?? 'Unknown';

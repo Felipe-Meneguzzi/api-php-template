@@ -11,6 +11,7 @@
     "php-di/php-di": "^7.0",
     "ext-pdo": "*",
     "illuminate/database": "^12.19",
-    "illuminate/console": "^12.19"
+    "illuminate/console": "^12.19",
+    "ramsey/uuid": "^4.8"
   }
 }

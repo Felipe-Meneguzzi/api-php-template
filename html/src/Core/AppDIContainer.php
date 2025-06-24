@@ -13,6 +13,12 @@ use App\Module\RequestLog\Repository\IRequestLogRepository;
 use App\Module\RequestLog\Repository\RequestLogRepository;
 use App\Module\RequestLog\Service\IRequestLogService;
 use App\Module\RequestLog\Service\RequestLogService;
+use App\Module\User\Repository\IUserRepository;
+use App\Module\User\Repository\UserRepository;
+use App\Module\User\Service\GetAllUsersService;
+use App\Module\User\Service\GetUserByIdService;
+use App\Module\User\Service\IGetAllUsersService;
+use App\Module\User\Service\IGetUserByIdService;
 use DI\Container;
 use DI\ContainerBuilder;
 use function DI\autowire;
@@ -26,6 +32,9 @@ class AppDIContainer {
 			IUserLoginRepository::class => autowire(UserLoginRepository::class),
             IRequestLogService::class => autowire(RequestLogService::class),
             IRequestLogRepository::class => autowire(RequestLogRepository::class),
+            IGetAllUsersService::class => autowire(GetAllUsersService::class),
+            IUserRepository::class => autowire(UserRepository::class),
+            IGetUserByIdService::class => autowire(GetUserByIdService::class),
 		]);
 
         /********************************************************DATABASE********************************************************/
