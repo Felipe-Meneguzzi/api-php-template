@@ -3,7 +3,7 @@ CREATE TABLE application_db.request_logs (
     user_id INT UNSIGNED NOT NULL,
     uri varchar(255) NOT NULL,
     method varchar(20) NOT NULL,
-    headers varchar(255) NOT NULL,
+    headers LONGTEXT NOT NULL,
     body LONGTEXT NULL,
     cookies LONGTEXT NULL,
     agent varchar(100) NOT NULL,

@@ -10,7 +10,9 @@ class AuthenticateMiddleware {
     public function __construct(protected IAuthenticateService $service) {}
 
     public function handle(HTTPRequest $request, callable $next) {
-        $this->service->Run();
+        $token = $request->headers['Authorization'] ?? '';
+
+        $this->service->Run($token);
 
         return $next($request);
     }

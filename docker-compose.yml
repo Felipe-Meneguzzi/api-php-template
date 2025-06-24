@@ -6,6 +6,7 @@ services:
     container_name: application-app
     volumes:
       - ./html:/var/www/html
+      - ./container-conf/openssl-keys:/app/openssl-keys
     networks:
       - application_network
     ports:

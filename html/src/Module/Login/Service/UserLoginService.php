@@ -6,6 +6,7 @@ namespace App\Module\Login\Service;
 use App\Core\DTOInterface;
 use App\Core\Exception\AppException;
 use App\Module\Login\Repository\IUserLoginRepository;
+use App\ValueObject\JWTToken;
 
 interface IUserLoginService {
 	public function Run(DTOInterface $iDTO): array;
@@ -25,8 +26,17 @@ class UserLoginService implements IUserLoginService {
             throw new AppException('Wrong password', 401);
         }
 
+        $token = JWTToken::fromPayload([
+            'id' => $user->uuid,
+            'login' => $user->login
+        ]);
+
         return [
+            'data' => [
+                'jwt_token' => $token->__toString()
+            ],
             'message' => 'Login successful'
         ];
 	}
+
 }

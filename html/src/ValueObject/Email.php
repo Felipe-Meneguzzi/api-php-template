@@ -8,15 +8,14 @@ use Stringable;
 
 final readonly class Email implements Stringable {
 
-    public string $value;
+    private string $value;
 
-    public function __construct(string $emailAddress) {
+    private function __construct(string $emailAddress) {
         $normalizedEmail = self::normalize($emailAddress);
         self::validate($normalizedEmail);
 
         $this->value = $normalizedEmail;
     }
-
 
     public static function fromString(string $emailAddress): self {
         return new self($emailAddress);
@@ -30,10 +29,6 @@ final readonly class Email implements Stringable {
 
     private static function normalize(string $emailAddress): string {
         return strtolower(trim($emailAddress));
-    }
-
-    public function getValue(): string {
-        return $this->value;
     }
 
     public function __toString(): string {

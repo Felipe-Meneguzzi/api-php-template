@@ -43,11 +43,19 @@ try {
     );
 
     $response->sendResponse();
+} catch (UnexpectedValueException $jwtException) {
+    $response = new DefaultResponse(
+        statusCode: 401,
+        data: ['ERROR' => $jwtException->getMessage()],
+        message: 'JWT Token Validation Failed'
+    );
+
+    $response->sendResponse();
 } catch (\Throwable $unhandledException) {
     $response = new DefaultResponse(
         statusCode: 500,
         data: ['ERROR' => $unhandledException->getMessage()],
-        message: 'Erro não tratado na API, contate o BackEnd'
+        message: 'Error not treated in APP, please contact support'
     );
 
     $response->sendResponse();
