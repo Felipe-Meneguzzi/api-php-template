@@ -41,7 +41,7 @@ WORKDIR /var/www/html
 # Copia o composer.json para rodar o install
 COPY html/composer.json /var/www/html/composer.json
 
-# Rodar o composer dump-autoload e install automaticamente ao construir a imagem
+# Rodar o script de inicialização, roda => composer dump-autoload, composer install, e criação do arquivo do swagger automaticamente ao construir a imagem
 COPY container-conf/entrypoint.sh /usr/local/bin/entrypoint.sh
 RUN chmod +x /usr/local/bin/entrypoint.sh
 ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
