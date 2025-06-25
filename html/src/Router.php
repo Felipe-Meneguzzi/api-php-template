@@ -16,7 +16,7 @@ use OpenApi\Attributes as OA;
     contact: new OA\Contact(email: 'admin@gmail.com')
 )]
 #[OA\Server(
-    url: 'http://localhost:8180',
+    url: 'http://localhost:8180/api',
     description: 'Servidor de Desenvolvimento'
 )]
 #[OA\SecurityScheme(
@@ -31,7 +31,7 @@ class Router {
     protected array $groupStack = [];
 
     #[OA\Get(
-        path: '/api',
+        path: '/on',
         summary: 'Verifica o status da API',
         tags: ['API'],
         responses: [

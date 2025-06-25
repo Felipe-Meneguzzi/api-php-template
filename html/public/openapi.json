@@ -10,7 +10,7 @@
     },
     "servers": [
         {
-            "url": "http://localhost:8180",
+            "url": "http://localhost:8180/api",
             "description": "Servidor de Desenvolvimento"
         }
     ],
@@ -98,13 +98,13 @@
                 ]
             }
         },
-        "/api": {
+        "/on": {
             "get": {
                 "tags": [
                     "API"
                 ],
                 "summary": "Verifica o status da API",
-                "operationId": "f33f1aa2191b1914ff1d65d6f84ef3ea",
+                "operationId": "0886248ef83710c5779fb1e6e71d8649",
                 "responses": {
                     "200": {
                         "description": "Api On"

@@ -9,6 +9,8 @@ services:
       - ./container-conf/openssl-keys:/app/openssl-keys
     networks:
       - application_network
+    env_file:
+      - ./html/.env
     ports:
       - "8180:80"
 
