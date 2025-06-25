@@ -37,7 +37,6 @@ class GetUserByIdController {
         if(!isset($request->dynamicParams['id'])) {
             throw new RequiredParamException(['id']);
         }
-
         $id = $request->dynamicParams['id'];
 
 		$serviceResponse = $this->service->Run($id);

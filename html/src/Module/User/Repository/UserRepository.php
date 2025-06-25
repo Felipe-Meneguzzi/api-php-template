@@ -9,7 +9,7 @@ use Illuminate\Database\Connection;
 
 interface IUserRepository {
 	public function getAll(): array;
-    public function getById(int $id): ?UserEntity;
+    public function getById(string $id): ?UserEntity;
 }
 
 class UserRepository implements IUserRepository {
@@ -37,7 +37,7 @@ class UserRepository implements IUserRepository {
         return $returnArray;
     }
 
-    public function getById(int $id): ?UserEntity {
+    public function getById(string $id): ?UserEntity {
         $data = $this->db->table($this->table)
             ->where('uuid', $id)
             ->first();

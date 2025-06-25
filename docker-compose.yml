@@ -10,6 +10,7 @@ services:
       - ./container-conf/openssl-keys:/app/openssl-keys
     networks:
       - application_network
+      - observability-network
     env_file:
       - ./html/.env
     ports:

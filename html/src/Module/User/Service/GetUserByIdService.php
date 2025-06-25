@@ -14,7 +14,7 @@ class GetUserByIdService implements IGetUserByIdService {
 	public function __construct(protected IUserRepository $repository) {}
 
 	public function Run(string $id): array {
-        $entity = $this->repository->getById((int)$id);
+        $entity = $this->repository->getById($id);
 
         if (!$entity) {
             throw new NotFoundException('User');

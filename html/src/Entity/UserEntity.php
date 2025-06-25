@@ -8,8 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class UserEntity extends Model{
     protected $table = 'users';
     protected $guarded = [
-        'id',
-        'uuid'
+        'id'
     ];
     protected $hidden = [
         'password'

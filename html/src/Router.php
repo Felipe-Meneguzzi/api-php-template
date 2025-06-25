@@ -94,7 +94,7 @@ class Router {
         $this->register($uri, 'DELETE', $handler, $middlewares ?? [], $controllerParams);
     }
 
-    public function dispatch(): void {
+    public function dispatch() {
         $method = strtoupper($this->request->method);
         $uri = parse_url($this->request->uri, PHP_URL_PATH);
 
@@ -143,11 +143,7 @@ class Router {
                 // Se houver mais valores do que chaves (ou vice-versa), array_combine lidará com isso
                 $this->request->dynamicParams = array_combine($paramKeys, $matches);
 
-                $response = $this->executePipeline($route['handler'], $route['middleware'], $route['controllerParams']);
-
-                $response->sendResponse();
-
-                return;
+                return $this->executePipeline($route['handler'], $route['middleware'], $route['controllerParams']);
             }
         }
 

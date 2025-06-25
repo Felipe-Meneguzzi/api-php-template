@@ -53,4 +53,12 @@ class DefaultResponse extends ObjectCore {
 
         return $response;
     }
+
+    public function getStatusCode() {
+        return $this->body['statusCode'];
+    }
+
+    public function getStatus() {
+        return $this->body['success'];
+    }
 }
