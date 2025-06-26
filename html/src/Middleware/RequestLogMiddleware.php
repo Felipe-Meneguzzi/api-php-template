@@ -24,7 +24,7 @@ class RequestLogMiddleware {
             ip: $request->requestIP ?? 'Unknown',
         );
 
-        $this->service->Run($iDTO);
+        $this->service->run($iDTO);
 
         return $next($request);
     }

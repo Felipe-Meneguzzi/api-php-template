@@ -10,8 +10,8 @@ use App\Module\User\Service\IGetAllUsersService;
 class GetAllUsersController {
 	public function __construct(protected IGetAllUsersService $service) {}
 
-	public function Run(HTTPRequest $request): DefaultResponse {
-		$serviceResponse = $this->service->Run();
+	public function run(HTTPRequest $request): DefaultResponse {
+		$serviceResponse = $this->service->run();
 
         return DefaultResponse::getDefaultResponse($serviceResponse);
 	}

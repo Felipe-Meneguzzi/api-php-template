@@ -12,7 +12,7 @@ class AuthenticateMiddleware {
     public function handle(HTTPRequest $request, callable $next) {
         $token = $request->headers['Authorization'] ?? '';
 
-        $this->service->Run($token);
+        $this->service->run($token);
 
         return $next($request);
     }

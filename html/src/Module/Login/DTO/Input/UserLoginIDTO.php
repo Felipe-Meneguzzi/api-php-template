@@ -7,7 +7,7 @@ use App\Core\DTOInterface;
 
 readonly class UserLoginIDTO implements DTOInterface {
     public function __construct(
-        public string $login,
-        public string $password
+        public ?string $login,
+        public ?string $password
     ) {}
 }

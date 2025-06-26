@@ -34,7 +34,7 @@ class UserLoginController {
     )]
 	public function __construct(protected IUserLoginService $service) {}
 
-	public function Run(HTTPRequest $request): DefaultResponse {
+	public function run(HTTPRequest $request): DefaultResponse {
 		$login = $request->body['login'] ?? null;
 		$password = $request->body['password'] ?? null;
 
@@ -44,7 +44,7 @@ class UserLoginController {
 
         $iDTO = new UserLoginIDTO($login, $password);
 
-		$serviceResponse = $this->service->Run($iDTO);
+		$serviceResponse = $this->service->run($iDTO);
 
         return DefaultResponse::getDefaultResponse($serviceResponse);
 	}

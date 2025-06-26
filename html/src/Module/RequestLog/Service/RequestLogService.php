@@ -10,13 +10,13 @@ use App\Module\RequestLog\Repository\IRequestLogRepository;
 use DateTime;
 
 interface IRequestLogService {
-	public function Run(RequestLogIDTO $iDTO): void;
+	public function run(RequestLogIDTO $iDTO): void;
 }
 
 class RequestLogService implements IRequestLogService {
 	public function __construct(protected IRequestLogRepository $repository) {}
 
-	public function Run(RequestLogIDTO $iDTO): void {
+	public function run(RequestLogIDTO $iDTO): void {
         $formatedTime = DateTime::createFromFormat('d/m/Y H:i:s', $iDTO->time);
 
         $data = [

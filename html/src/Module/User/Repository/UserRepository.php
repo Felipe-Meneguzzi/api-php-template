@@ -10,6 +10,7 @@ use Illuminate\Database\Connection;
 interface IUserRepository {
 	public function getAll(): array;
     public function getById(string $id): ?UserEntity;
+    public function create(UserEntity $userEntity): UserEntity;
 }
 
 class UserRepository implements IUserRepository {
@@ -49,5 +50,13 @@ class UserRepository implements IUserRepository {
         $entity = new $this->entityClass;
 
         return $entity->newInstance((array) $data, true);
+    }
+
+    public function create(UserEntity $entity): UserEntity {
+        $entity->setConnection($this->db->getName());
+
+        $entity->save();
+
+        return $entity;
     }
 }

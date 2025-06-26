@@ -6,6 +6,7 @@ require __DIR__ . '/../src/opentelemetry_bootstrap.php';
 
 use App\Core\AppDIContainer;
 use App\Core\Exception\AppException;
+use App\Core\Exception\AppStackException;
 use App\Core\Http\DefaultResponse;
 use App\Core\Http\HTTPRequest;
 use App\Router;
@@ -70,22 +71,27 @@ try {
     if(isset($rootSpan))
         $rootSpan->setStatus('Ok', $response->body['message'] ?? '');
 
+}  catch (UnexpectedValueException $jwtException) {
+
+    $response = new DefaultResponse(statusCode: 401, message: 'JWTToken Authorization ERROR', errors: [$jwtException->getMessage()]);
+    if(isset($rootSpan))
+        $rootSpan->setStatus('Ok', '401- JWTToken Authorization ERROR: ' . $jwtException->getMessage() ?? '');
+
+} catch (AppStackException $appStackException) {
+
+    $response = new DefaultResponse(statusCode: $appStackException->getCode(), message: 'ERROR', errors: $appStackException->getErrors());
+    if(isset($rootSpan))
+        $rootSpan->setStatus('Ok', $appStackException->getCode() . '- ' . $appStackException->getMessage() ?? '');
 
 } catch (AppException $appException) {
 
-    $response = new DefaultResponse(statusCode: $appException->getCode(), message: $appException->getMessage());
+    $response = new DefaultResponse(statusCode: $appException->getCode(), message: 'ERROR', errors: [$appException->getMessage()]);
     if(isset($rootSpan))
         $rootSpan->setStatus('Ok', $appException->getCode() . '- ' . $appException->getMessage() ?? '');
 
-} catch (UnexpectedValueException $jwtException) {
-
-    $response = new DefaultResponse(statusCode: 401, message: 'JWTToken Authorization Failed: ' . $jwtException->getMessage());
-    if(isset($rootSpan))
-        $rootSpan->setStatus('Ok', '401- JWTToken Authorization Failed: ' . $jwtException->getMessage() ?? '');
-
 } catch (\Throwable $unhandledException) {
 
-    $response = new DefaultResponse(statusCode: 500, data: ['ERROR' => $unhandledException->getMessage()], message: 'Error not treated in APP, please contact support');
+    $response = new DefaultResponse(statusCode: 500, message: 'ERROR not expected, contact support', errors: ['ERROR' => $unhandledException->getMessage()]);
     if(isset($rootSpan)) {
         $rootSpan->recordException($unhandledException, [TraceAttributes::EXCEPTION_ESCAPED => true]);
         $rootSpan->setStatus('Error', '500- ' . $unhandledException->getMessage() ?? 'Internal Server Error with no message');

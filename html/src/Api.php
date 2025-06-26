@@ -4,6 +4,7 @@ declare(strict_types=1);
 use App\Middleware\AuthenticateMiddleware;
 use App\Middleware\RequestLogMiddleware;
 use App\Module\Login\Controller\UserLoginController;
+use App\Module\User\Controller\CreateUserController;
 use App\Module\User\Controller\GetUserByIdController;
 use App\Router;
 use App\Module\User\Controller\GetAllUsersController;
@@ -22,7 +23,7 @@ return function (Router $router) {
 
         $router->group(['prefix' => '/login'], function ($router) {
 
-            $router->post(uri: '', handler: [UserLoginController::class, 'Run']);
+            $router->post(uri: '', handler: [UserLoginController::class, 'run']);
 
         });
 
@@ -33,8 +34,9 @@ return function (Router $router) {
         $router->group(['prefix' => '/auth', 'middleware' => [AuthenticateMiddleware::class]], function ($router) {
 
             $router->group(['prefix' => '/user'], function ($router) {
-                $router->get(uri: '/{id}', handler: [GetUserByIdController::class, 'Run']);
-                $router->get(uri: '', handler: [GetAllUsersController::class, 'Run']);
+                $router->get(uri: '/{id}', handler: [GetUserByIdController::class, 'run']);
+                $router->get(uri: '', handler: [GetAllUsersController::class, 'run']);
+                $router->post(uri: '', handler: [CreateUserController::class, 'run']);
             });
 
         });

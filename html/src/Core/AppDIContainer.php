@@ -17,8 +17,10 @@ use App\Module\RequestLog\Service\IRequestLogService;
 use App\Module\RequestLog\Service\RequestLogService;
 use App\Module\User\Repository\IUserRepository;
 use App\Module\User\Repository\UserRepository;
+use App\Module\User\Service\CreateUserService;
 use App\Module\User\Service\GetAllUsersService;
 use App\Module\User\Service\GetUserByIdService;
+use App\Module\User\Service\ICreateUserService;
 use App\Module\User\Service\IGetAllUsersService;
 use App\Module\User\Service\IGetUserByIdService;
 use DI\Container;
@@ -38,6 +40,7 @@ class AppDIContainer {
             IUserRepository::class => autowire(UserRepository::class),
             IGetUserByIdService::class => autowire(GetUserByIdService::class),
             IAuthenticateService::class => autowire(AuthenticateService::class),
+            ICreateUserService::class =>  autowire(CreateUserService::class),
 		]);
 
         /********************************************************DATABASE********************************************************/

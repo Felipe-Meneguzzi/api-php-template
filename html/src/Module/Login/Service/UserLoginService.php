@@ -9,13 +9,13 @@ use App\Module\Login\Repository\IUserLoginRepository;
 use App\ValueObject\JWTToken;
 
 interface IUserLoginService {
-	public function Run(DTOInterface $iDTO): array;
+	public function run(DTOInterface $iDTO): array;
 }
 
 class UserLoginService implements IUserLoginService {
 	public function __construct(protected IUserLoginRepository $repository) {}
 
-	public function Run(DTOInterface $iDTO): array {
+	public function run(DTOInterface $iDTO): array {
 		$user = $this->repository->findByLogin($iDTO->login);
 
         if (!$user) {

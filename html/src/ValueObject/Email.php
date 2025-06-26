@@ -17,7 +17,10 @@ final readonly class Email implements Stringable {
         $this->value = $normalizedEmail;
     }
 
-    public static function fromString(string $emailAddress): self {
+    public static function fromString(?string $emailAddress): ?self {
+        if(empty($emailAddress)) {
+            return null;
+        }
         return new self($emailAddress);
     }
 
