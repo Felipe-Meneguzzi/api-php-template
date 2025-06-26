@@ -23,7 +23,7 @@ final readonly class UserIntegrityModel extends IntegrityModelCore {
         $this->uuid = Uuid::uuid4()->toString();
         $this->name = $name;
         $this->login = $login;
-        $this->password = $password;
+        $this->password = password_hash($password,  PASSWORD_DEFAULT);
         $this->email = $email->__toString();
         if (!empty($phone)) {
             $this->phone = $phone->__toString();

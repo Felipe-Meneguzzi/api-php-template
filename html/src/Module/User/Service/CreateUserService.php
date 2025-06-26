@@ -9,6 +9,7 @@ use App\Module\User\DTO\Input\CreateUserIDTO;
 use App\Module\User\Repository\IUserRepository;
 use App\ValueObject\Email;
 use App\ValueObject\Phone;
+use Illuminate\Support\Facades\Password;
 
 interface ICreateUserService {
 	public function run(CreateUserIDTO $iDTO): array;
