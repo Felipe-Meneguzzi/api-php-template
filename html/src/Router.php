@@ -94,7 +94,7 @@ class Router {
         $this->register($uri, 'DELETE', $handler, $middlewares ?? [], $controllerParams);
     }
 
-    public function dispatch() {
+    public function dispatch(): DefaultResponse {
         $method = strtoupper($this->request->method);
         $uri = parse_url($this->request->uri, PHP_URL_PATH);
 
