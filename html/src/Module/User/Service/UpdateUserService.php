@@ -24,12 +24,11 @@ class UpdateUserService implements IUpdateUserService {
             throw new NotFoundException('User');
         }
 
-
         $userIntegrity = new UserIntegrityModel(
             name: trim($iDTO->name),
-            login: $originalEntity->login,
-            password: $originalEntity->password,
-            email: Email::fromString(trim($originalEntity->email)),
+            login: $originalEntity->login,                          //Não permitido atualizar
+            password: $originalEntity->password,                    //Não permitido atualizar
+            email: Email::fromString(trim($originalEntity->email)), //Não permitido atualizar
             phone: Phone::fromString(trim($iDTO->phone)),
             uuid: $iDTO->uuid
         );
@@ -39,7 +38,6 @@ class UpdateUserService implements IUpdateUserService {
 		$data = $this->repository->update($user);
 
         return [
-            'statusCode' => 201,
             'data' => $data,
             'message' => 'User updated'
         ];
