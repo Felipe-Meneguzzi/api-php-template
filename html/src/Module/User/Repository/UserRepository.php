@@ -11,45 +11,38 @@ interface IUserRepository {
 	public function getAll(): array;
     public function getById(string $id): ?UserEntity;
     public function create(UserEntity $userEntity): UserEntity;
+    public function update(UserEntity $userEntity): UserEntity;
+    public function delete(UserEntity $userEntity): void;
 }
 
 class UserRepository implements IUserRepository {
 	private Connection $db;
-    private string $table;
     private string $entityClass;
 
 	public function __construct(protected IDBConnection $dbClass) {
 		$this->db = $dbClass->getConnection();
-        $this->table = 'users';
         $this->entityClass = UserEntity::class;
 	}
 
     public function getAll(): array {
         $returnArray = [];
-        $dataArray = $this->db->table($this->table)
-            ->get();
+        $entity = new $this->entityClass;
+        $entity->setConnection($this->db->getName());
 
-        foreach ($dataArray as $data){
-            $entity = new $this->entityClass;
+        $collection = $entity->get();
 
-            $returnArray[] = $entity->newInstance((array) $data, true);
+        foreach ($collection as $userEntity) {
+            $returnArray[] = $userEntity;
         }
 
         return $returnArray;
     }
 
-    public function getById(string $id): ?UserEntity {
-        $data = $this->db->table($this->table)
-            ->where('uuid', $id)
-            ->first();
-
-        if (!$data) {
-            return null;
-        }
-
+    public function getById(string $uuid): ?UserEntity {
         $entity = new $this->entityClass;
+        $entity->setConnection($this->db->getName());
 
-        return $entity->newInstance((array) $data, true);
+        return $entity->where('uuid', $uuid)->first();
     }
 
     public function create(UserEntity $entity): UserEntity {
@@ -58,5 +51,20 @@ class UserRepository implements IUserRepository {
         $entity->save();
 
         return $entity;
+    }
+
+    public function update(UserEntity $entity): UserEntity {
+        $entity->setConnection($this->db->getName());
+        $entity->exists = true;
+
+        $entity->save();
+
+        return $entity;
+    }
+
+    public function delete(UserEntity $entity): void {
+        $entity->setConnection($this->db->getName());
+
+        $entity->delete();
     }
 }

@@ -17,10 +17,15 @@ final readonly class UserIntegrityModel extends IntegrityModelCore {
     private string $email;
     private ?string $phone;
 
-    public function __construct(?string $name, ?string $login, ?string $password, ?Email $email, ?Phone $phone) {
+    public function __construct(?string $name, ?string $login, ?string $password, ?Email $email, ?Phone $phone, ?string $uuid = null) {
         $this->validate($name, $login, $password, $email, $phone);
 
-        $this->uuid = Uuid::uuid4()->toString();
+        if (empty($uuid)) {
+            $this->uuid = Uuid::uuid4()->toString();
+        }else {
+            $this->uuid = $uuid;
+        }
+
         $this->name = $name;
         $this->login = $login;
         $this->password = password_hash($password,  PASSWORD_DEFAULT);

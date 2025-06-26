@@ -5,7 +5,9 @@ use App\Middleware\AuthenticateMiddleware;
 use App\Middleware\RequestLogMiddleware;
 use App\Module\Login\Controller\UserLoginController;
 use App\Module\User\Controller\CreateUserController;
+use App\Module\User\Controller\DeleteUserByIdController;
 use App\Module\User\Controller\GetUserByIdController;
+use App\Module\User\Controller\UpdateUserController;
 use App\Router;
 use App\Module\User\Controller\GetAllUsersController;
 
@@ -37,6 +39,8 @@ return function (Router $router) {
                 $router->get(uri: '/{id}', handler: [GetUserByIdController::class, 'run']);
                 $router->get(uri: '', handler: [GetAllUsersController::class, 'run']);
                 $router->post(uri: '', handler: [CreateUserController::class, 'run']);
+                $router->put(uri: '', handler: [UpdateUserController::class, 'run']);
+                $router->delete(uri: '/{id}', handler: [DeleteUserByIdController::class, 'run']);
             });
 
         });

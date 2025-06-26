@@ -4,13 +4,13 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use Illuminate\Database\Eloquent\Model;
-use Ramsey\Uuid\Uuid;
 
 class UserEntity extends Model{
     protected $table = 'users';
+    protected $primaryKey = 'uuid';
+
     protected $hidden = [
-        'password',
-        'id'
+        'password'
     ];
 
     protected $fillable = [
@@ -22,6 +22,12 @@ class UserEntity extends Model{
         'phone'
     ];
 
+    protected $casts = [
+        'uuid' => 'string'
+    ];
+
     public $timestamps = false;
+
+    public $incrementing = false;
 
 }

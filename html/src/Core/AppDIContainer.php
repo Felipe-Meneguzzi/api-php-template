@@ -18,11 +18,15 @@ use App\Module\RequestLog\Service\RequestLogService;
 use App\Module\User\Repository\IUserRepository;
 use App\Module\User\Repository\UserRepository;
 use App\Module\User\Service\CreateUserService;
+use App\Module\User\Service\DeleteUserByIdService;
 use App\Module\User\Service\GetAllUsersService;
 use App\Module\User\Service\GetUserByIdService;
 use App\Module\User\Service\ICreateUserService;
+use App\Module\User\Service\IDeleteUserByIdService;
 use App\Module\User\Service\IGetAllUsersService;
 use App\Module\User\Service\IGetUserByIdService;
+use App\Module\User\Service\IUpdateUserService;
+use App\Module\User\Service\UpdateUserService;
 use DI\Container;
 use DI\ContainerBuilder;
 use function DI\autowire;
@@ -41,6 +45,8 @@ class AppDIContainer {
             IGetUserByIdService::class => autowire(GetUserByIdService::class),
             IAuthenticateService::class => autowire(AuthenticateService::class),
             ICreateUserService::class =>  autowire(CreateUserService::class),
+            IUpdateUserService::class =>  autowire(UpdateUserService::class),
+            IDeleteUserByIdService::class =>  autowire(DeleteUserByIdService::class),
 		]);
 
         /********************************************************DATABASE********************************************************/
