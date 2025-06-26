@@ -1,3 +1,4 @@
+
 # API PHP Template
 
 Este repositório serve como um template robusto e escalável para a construção de novas APIs em PHP. Ele foi projetado com uma arquitetura modular e boas práticas de desenvolvimento para garantir que seu projeto comece com uma base sólida, segura e de fácil manutenção.
@@ -7,11 +8,17 @@ O objetivo deste template é fornecer uma estrutura completa e pronta para uso, 
 ## Principais Funcionalidades
 
 -   **🚀 Ambiente Dockerizado**: Configuração completa com Docker e Docker Compose para os serviços de PHP/Apache e MySQL, garantindo um ambiente de desenvolvimento e produção consistente.
+-   **🔭 Stack de Observabilidade (Logs, Métricas e Traces)**: Integração nativa com **OpenTelemetry** para coletar e enviar dados para um conjunto de ferramentas de monitoramento de ponta, incluindo:
+    -   **Prometheus**: Para coletar e armazenar métricas.
+    -   **Grafana Tempo**: Para armazenar e consultar traces distribuídos.
+    -   **Grafana Loki**: Para agregar e consultar logs.
+    -   **Grafana**: Para visualizar todos os dados em dashboards interativos.
 -   **🧱 Arquitetura Modular**: O código é organizado em módulos de negócio independentes, facilitando a manutenção, o desacoplamento e a escalabilidade do sistema.
 -   **🔒 Autenticação Segura com JWT**: Sistema de autenticação baseado em JSON Web Tokens com assinatura assimétrica RSA (RS256), garantindo uma comunicação segura e stateless.
 -   **🗃️ Migrations e Seeders**: Gerenciamento do banco de dados através de scripts SQL para versionamento de schema (migrations) e povoamento de dados iniciais (seeders).
 -   **⚙️ Injeção de Dependência**: Utiliza um contêiner de Injeção de Dependência (PHP-DI) para gerenciar as instâncias e promover baixo acoplamento entre os componentes.
 -   **🛣️ Sistema de Roteamento Avançado**: Um roteador flexível que suporta verbos RESTful, agrupamento de rotas, middlewares em pipeline e validação de parâmetros com Regex.
+-   **✨ Validação de Dados com `IntegrityModel`**: Uma camada de validação de dados de entrada que garante a integridade dos dados antes de chegarem à lógica de negócio.
 
 ---
 
@@ -52,14 +59,16 @@ Siga os passos abaixo para configurar e executar o projeto localmente.
     ```bash
     docker-compose up -d --build
     ```
-    -   A aplicação estará disponível em: `http://localhost:8180`
-    -   O banco de dados MySQL estará acessível na porta: `3316`
+    -   **API**: `http://localhost:8180`
+    -   **MySQL**: `localhost:3316`
+    -   **Grafana**: `http://localhost:3000` (user: `admin`, pass: `admin`)
+    -   **Prometheus**: `http://localhost:9190`
 
 5.  **Execute as Migrations e Seeders:**
     O script de entrada do container já executa o `composer install`. Agora, você precisa popular o banco de dados.
 
     ```bash
-    # Acesse o terminal do container da aplicação
+    # Acesse o terminal do container do MySQL
     docker exec -it application-mysql bash
 
     # Dentro do container, execute os scripts SQL para criar as tabelas e popular os dados
@@ -93,7 +102,7 @@ A aplicação é dividida em **Módulos**, localizados em `html/src/Module/`. Ca
 ### 2. Padrão Service-Repository
 
 * **Services (Camada de Serviço)**: Contêm a lógica de negócio e as regras da aplicação (ex: `UserLoginService`). Eles orquestram as operações e interagem com os repositórios.
-* **Repositories (Camada de Repositório)**: São responsáveis pela comunicação com a fonte de dados (ex: `UserLoginRepository`). Eles abstraem a lógica de acesso a dados (SQL, Eloquent, etc.).
+* **Repositories (Camada de Repositório)**: São responsáveis pela comunicação com a fonte de dados (ex: `UserLoginRepository`). Eles abstraem a lógica de acesso a dados (SQL, etc.).
 
 ### 3. Injeção de Dependência (DI)
 
@@ -102,7 +111,11 @@ Utilizamos o container **PHP-DI** para gerenciar as dependências, configurado e
 ### 4. DTOs (Data Transfer Objects) e Entities
 
 * **DTOs**: Objetos que carregam dados entre as camadas (ex: `UserLoginIDTO`). Eles garantem que os dados de entrada sejam explícitos e tipados.
-* **Entities**: Representam as tabelas do banco de dados e são gerenciadas pelo Eloquent (ex: `UserEntity`).
+* **Entities**: Representam as tabelas do banco de dados (ex: `UserEntity`).
+
+### 5. `IntegrityModel` para Validação
+
+Antes que os dados cheguem aos `Services`, eles podem ser validados por um `IntegrityModel`. Essa classe é responsável por verificar a integridade, formato e regras dos dados de entrada, retornando um `AppStackException` com todos os erros encontrados.
 
 ---
 
@@ -114,21 +127,19 @@ Para manter o padrão arquitetural do projeto, siga estes passos ao criar um nov
 
 2.  **Migration**: Em `db-conf/migration/`, crie o arquivo SQL `create_products_table.sql`.
 
-3.  **Entity**: Em `html/src/Entity/`, crie a classe `ProductEntity.php` que estende `Model`.
+3.  **Entity**: Em `html/src/Entity/`, crie a classe `ProductEntity.php`.
 
 4.  **Repository**:
-    * Em `.../Product/Repository/`, crie a interface `IProductRepository.php`.
-    * Crie a classe `ProductRepository.php` que implementa a interface.
+    * Em `.../Product/Repository/`, crie a classe `ProductRepository.php`.
 
 5.  **Service**:
-    * Em `.../Product/Service/`, crie a interface `IProductService.php`.
-    * Crie a classe `ProductService.php` que implementa a interface e injeta `IProductRepository` em seu construtor.
+    * Em `.../Product/Service/`, crie a classe `ProductService.php` que injeta `ProductRepository` em seu construtor.
 
 6.  **DTO**: Em `.../Product/DTO/Input/`, crie os DTOs necessários (ex: `CreateProductDTO.php`).
 
-7.  **Controller**: Em `.../Product/Controller/`, crie `ProductController.php`, injetando `IProductService`.
+7.  **Controller**: Em `.../Product/Controller/`, crie `ProductController.php`, injetando `ProductService`.
 
-8.  **Injeção de Dependência**: Registre as novas interfaces no container `AppDIContainer.php`.
+8.  **Injeção de Dependência**: Registre as novas classes no container `AppDIContainer.php`.
     ```php
     // Em AppDIContainer.php
     $builder->addDefinitions([
